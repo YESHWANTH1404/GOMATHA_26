@@ -1,0 +1,769 @@
+HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GOMATHA 26 | Animal Health & Registration Portal</title>
+  <style>
+    :root {
+      --primary: #1b5e20;
+      --primary-light: #2e7d32;
+      --accent: #ef6c00;
+      --bg: #f4f7f5;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d1d5db;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* Login Screen */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1b5e20 0%, #388e3c 100%);
+      padding: 20px;
+    }
+
+    .login-box {
+      background: var(--card);
+      padding: 40px 32px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 410px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .login-box h1 {
+      color: var(--primary);
+      font-size: 28px;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+
+    .login-box p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    .auth-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn-secondary {
+      background: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #1f2937;
+    }
+
+    .btn-google {
+      background: #0f766e;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .btn-google:hover {
+      background: #115e59;
+    }
+
+    .auth-status {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #b91c1c;
+      min-height: 18px;
+    }
+
+    /* Main App */
+    #app-screen {
+      display: none;
+    }
+
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    header h1 {
+      font-size: 22px;
+      letter-spacing: 0.5px;
+    }
+
+    header span {
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-logout {
+      background: #c62828;
+      padding: 8px 14px;
+      font-size: 13px;
+    }
+
+    .btn-logout:hover {
+      background: #b71c1c;
+    }
+
+    .container {
+      max-width: 1150px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .card h2 {
+      color: var(--primary);
+      font-size: 19px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e8f5e9;
+    }
+
+    .section-label {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 18px 0 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #374151;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* Registered Animals Cards */
+    .records-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 16px;
+    }
+
+    .animal-card {
+      border: 1px solid #e5e7eb;
+      border-left: 5px solid var(--primary);
+      border-radius: 10px;
+      padding: 16px;
+      background: #fafafa;
+      position: relative;
+    }
+
+    .animal-card h3 {
+      color: var(--primary);
+      font-size: 17px;
+      margin-bottom: 4px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #e8f5e9;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .animal-card p {
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: #374151;
+    }
+
+    .delete-btn {
+      margin-top: 10px;
+      background: #fee2e2;
+      color: #b91c1c;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* Future IoT Integration Panel */
+    .iot-banner {
+      background: #111827;
+      color: #f9fafb;
+      border-radius: 12px;
+      padding: 22px;
+    }
+
+    .iot-banner h2 {
+      color: #4ade80;
+      border-bottom: 1px solid #374151;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    .iot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .sensor-box {
+      background: #1f2937;
+      border: 1px dashed #4b5563;
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .sensor-box strong {
+      display: block;
+      color: #93c5fd;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .sensor-box span {
+      font-size: 13px;
+      color: #9ca3af;
+    }
+
+    footer.portal-footer {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      padding: 12px 0 28px;
+    }
+
+    footer.portal-footer a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. LOGIN / SIGN UP SCREEN -->
+  <div id="login-screen">
+    <div class="login-box">
+      <h1>GOMATHA 26</h1>
+      <p>Smart Livestock & Pet Health Registration System</p>
+      <form id="auth-form" onsubmit="signInEmail(event)">
+        <input type="email" id="loginEmail" placeholder="Enter Gmail / Email Address" required />
+        <input type="password" id="loginPassword" placeholder="Enter Password (min 6 chars)" required />
+        <div class="auth-actions">
+          <button type="submit" class="btn" style="flex: 1;">Login</button>
+          <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="signUpEmail()">Create Account</button>
+        </div>
+        <button type="button" class="btn btn-google" onclick="signInWithGoogle()">Continue with Google</button>
+        <div id="auth-status" class="auth-status"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN APPLICATION -->
+  <div id="app-screen">
+    <header>
+      <div>
+        <h1>GOMATHA 26</h1>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <span id="welcome-user">Logged in</span>
+        <span id="role-badge">Member View</span>
+        <button class="btn btn-logout" onclick="logout()">Logout</button>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- REGISTRATION FORM -->
+      <div class="card">
+        <h2>Register New Animal Profile</h2>
+        <form id="animal-form" onsubmit="saveAnimal(event)">
+
+          <div class="section-label">1. Basic Identification</div>
+          <div class="grid">
+            <div class="form-group">
+              <label>Animal Name *</label>
+              <input type="text" id="animalName" placeholder="e.g., Lakshmi" required />
+            </div>
+            <div class="form-group">
+              <label>Animal / Tag ID *</label>
+              <input type="text" id="animalId" placeholder="e.g., GM26-101" required />
+            </div>
+            <div class="form-group">
+              <label>Animal Type *</label>
+              <select id="animalType" required>
+                <option value="Cow">Cow</option>
+                <option value="Buffalo">Buffalo</option>
+                <option value="Dog">Dog</option>
+                <option value="Goat">Goat</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Breed *</label>
+              <input type="text" id="breed" placeholder="e.g., Ongole / Murrah / Labrador" required />
+            </div>
+            <div class="form-group">
+              <label>Age (Years / Months) *</label>
+              <input type="text" id="age" placeholder="e.g., 4 Years" required />
+            </div>
+            <div class="form-group">
+              <label>Gender *</label>
+              <select id="gender" onchange="togglePregnancyFields()" required>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="reproduction-section">
+            <div class="section-label">2. Pregnancy & Birth History</div>
+            <div class="grid">
+              <div class="form-group">
+                <label>Number of Previous Pregnancies</label>
+                <input type="number" id="prevPregnancies" min="0" value="0" />
+              </div>
+              <div class="form-group">
+                <label>Current Pregnancy Status</label>
+                <select id="pregnancyStatus">
+                  <option value="Not Pregnant">Not Pregnant</option>
+                  <option value="Pregnant">Pregnant</option>
+                  <option value="Recently Delivered">Recently Delivered</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Number of Times Given Birth</label>
+                <input type="number" id="birthCount" min="0" value="0" />
+              </div>
+              <div class="form-group">
+                <label>Last Delivery Date</label>
+                <input type="date" id="lastDelivery" />
+              </div>
+            </div>
+          </div>
+
+          <div class="section-label">3. Physical, Milk & Health Records</div>
+          <div class="grid">
+            <div class="form-group">
+              <label>Weight (kg) *</label>
+              <input type="number" id="weight" step="0.1" placeholder="e.g., 420" required />
+            </div>
+            <div class="form-group">
+              <label>Daily Milk Production (Liters/day)</label>
+              <input type="number" id="milkProduction" step="0.1" placeholder="0 if not applicable" value="0" />
+            </div>
+            <div class="form-group">
+              <label>Vaccination Details *</label>
+              <input type="text" id="vaccination" placeholder="e.g., FMD, Rabies (Up to date)" required />
+            </div>
+            <div class="form-group">
+              <label>Deworming Details *</label>
+              <input type="text" id="deworming" placeholder="e.g., Done Oct 2026" required />
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 14px;">
+            <label>Previous Illness & Medical History</label>
+            <textarea id="medicalHistory" rows="2" placeholder="Mention past fever, injuries, surgeries, or write 'None'"></textarea>
+          </div>
+
+          <div class="section-label">4. Owner Information</div>
+          <div class="grid">
+            <div class="form-group">
+              <label>Owner Name *</label>
+              <input type="text" id="ownerName" placeholder="e.g., Ramesh Kumar" required />
+            </div>
+            <div class="form-group">
+              <label>Village / Town *</label>
+              <input type="text" id="village" placeholder="e.g., Kovvur" required />
+            </div>
+            <div class="form-group">
+              <label>Contact Number *</label>
+              <input type="tel" id="contact" placeholder="e.g., 9876543210" required />
+            </div>
+          </div>
+
+          <button type="submit" class="btn" style="margin-top: 20px; width: 100%;">Save Animal Profile</button>
+        </form>
+      </div>
+
+      <!-- DISPLAY REGISTERED ANIMALS -->
+      <div class="card">
+        <h2 id="records-heading">Registered Animals (<span id="record-count">0</span>)</h2>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by name, ID, breed, owner, or village..."
+            oninput="renderAnimals()"
+            style="flex: 1; min-width: 220px; padding: 10px; border: 1px solid #d1d5db; border-radius: 7px; font-size: 14px;"
+          />
+          <button type="button" class="btn" onclick="searchGoogle()">
+            Search on Google
+          </button>
+        </div>
+
+        <div id="records-container" class="records-grid"></div>
+      </div>
+
+      <!-- FUTURE INTEGRATION: ESP32 & SENSORS -->
+      <div class="iot-banner">
+        <h2>Future Hardware Integration (ESP32 IoT Module)</h2>
+        <p style="font-size: 14px; color: #d1d5db;">
+          Ready for Phase 2 connection: Live telemetry from an <strong>ESP32 microcontroller</strong> collar/tag will stream directly into each Animal ID above.
+        </p>
+        <div class="iot-grid">
+          <div class="sensor-box">
+            <strong>ESP32 Controller</strong>
+            <span>Status: Standby / API Ready</span>
+          </div>
+          <div class="sensor-box">
+            <strong>Body Temperature</strong>
+            <span>DS18B20 / MLX90614 (-- °C)</span>
+          </div>
+          <div class="sensor-box">
+            <strong>Pulse Rate Sensor</strong>
+            <span>MAX30102 / Heartbeat (-- BPM)</span>
+          </div>
+          <div class="sensor-box">
+            <strong>GPS Location</strong>
+            <span>NEO-6M Module (Lat/Long)</span>
+          </div>
+        </div>
+      </div>
+
+      <footer class="portal-footer">
+        GOMATHA 26 • GitHub: <a href="https://github.com/YESHWANTH1404" target="_blank" rel="noopener">YESHWANTH1404/GOMATHA_26</a> • Live Link: <a href="https://yeshwanth1404.github.io/GOMATHA_26/" target="_blank" rel="noopener">yeshwanth1404.github.io/GOMATHA_26</a>
+      </footer>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      deleteDoc,
+      doc,
+      query,
+      where,
+      onSnapshot,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const GITHUB_PAGES_URL = "https://yeshwanth1404.github.io/GOMATHA_26/";
+
+    // Replace with your Firebase Web App config from Firebase Console -> Project Settings
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Set your admin Gmail address here so only you see/manage every member's records
+    const ADMIN_EMAIL = "your-admin-gmail@gmail.com";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const googleProvider = new GoogleAuthProvider();
+    const animalsCol = collection(db, "animals");
+
+    let currentUser = null;
+    let isAdmin = false;
+    let animals = [];
+    let unsubscribeRecords = null;
+
+    function setAuthError(msg) {
+      document.getElementById("auth-status").textContent = msg || "";
+    }
+
+    window.signInEmail = async function (e) {
+      e.preventDefault();
+      setAuthError("");
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        setAuthError(err.message);
+      }
+    };
+
+    window.signUpEmail = async function () {
+      setAuthError("");
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      if (!email || !password) {
+        setAuthError("Enter both an email and password to create an account.");
+        return;
+      }
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        setAuthError(err.message);
+      }
+    };
+
+    window.signInWithGoogle = async function () {
+      setAuthError("");
+      try {
+        await signInWithPopup(auth, googleProvider);
+      } catch (err) {
+        setAuthError(err.message);
+      }
+    };
+
+    window.logout = async function () {
+      if (unsubscribeRecords) {
+        unsubscribeRecords();
+        unsubscribeRecords = null;
+      }
+      animals = [];
+      await signOut(auth);
+    };
+
+    window.togglePregnancyFields = function () {
+      const gender = document.getElementById("gender").value;
+      const reproSection = document.getElementById("reproduction-section");
+      reproSection.style.display = gender === "Female" ? "block" : "none";
+    };
+
+    window.saveAnimal = async function (e) {
+      e.preventDefault();
+      if (!currentUser) return;
+
+      const gender = document.getElementById("gender").value;
+      const newAnimal = {
+        createdByUid: currentUser.uid,
+        createdByEmail: currentUser.email,
+        portalUrl: GITHUB_PAGES_URL,
+        createdAt: serverTimestamp(),
+        animalName: document.getElementById("animalName").value.trim(),
+        animalId: document.getElementById("animalId").value.trim(),
+        animalType: document.getElementById("animalType").value,
+        breed: document.getElementById("breed").value.trim(),
+        age: document.getElementById("age").value.trim(),
+        gender: gender,
+        prevPregnancies: gender === "Female" ? document.getElementById("prevPregnancies").value : "N/A",
+        pregnancyStatus: gender === "Female" ? document.getElementById("pregnancyStatus").value : "N/A",
+        birthCount: gender === "Female" ? document.getElementById("birthCount").value : "N/A",
+        lastDelivery: gender === "Female" ? (document.getElementById("lastDelivery").value || "None") : "N/A",
+        weight: document.getElementById("weight").value,
+        milkProduction: document.getElementById("milkProduction").value || "0",
+        vaccination: document.getElementById("vaccination").value.trim(),
+        deworming: document.getElementById("deworming").value.trim(),
+        medicalHistory: document.getElementById("medicalHistory").value.trim() || "None",
+        ownerName: document.getElementById("ownerName").value.trim(),
+        village: document.getElementById("village").value.trim(),
+        contact: document.getElementById("contact").value.trim()
+      };
+
+      await addDoc(animalsCol, newAnimal);
+      document.getElementById("animal-form").reset();
+      togglePregnancyFields();
+      alert("Animal profile saved to GOMATHA 26!");
+    };
+
+    window.deleteAnimal = async function (docId) {
+      if (!docId || !currentUser) return;
+      await deleteDoc(doc(db, "animals", docId));
+    };
+
+    window.searchGoogle = function () {
+      const queryText = document.getElementById("searchInput").value.trim();
+      const finalQuery = queryText || "GOMATHA livestock health";
+      window.open("https://www.google.com/search?q=" + encodeURIComponent(finalQuery), "_blank");
+    };
+
+    function subscribeToAnimals(user) {
+      if (unsubscribeRecords) {
+        unsubscribeRecords();
+      }
+
+      isAdmin = (user.email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
+      document.getElementById("role-badge").textContent = isAdmin ? "Admin Control (All Records)" : "My Saved Records Only";
+      document.getElementById("records-heading").innerHTML =
+        `${isAdmin ? "All Registered Animals" : "My Registered Animals"} (<span id="record-count">0</span>)`;
+
+      const q = isAdmin
+        ? query(animalsCol)
+        : query(animalsCol, where("createdByUid", "==", user.uid));
+
+      unsubscribeRecords = onSnapshot(q, (snapshot) => {
+        animals = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+        renderAnimals();
+      });
+    }
+
+    window.renderAnimals = function () {
+      const container = document.getElementById("records-container");
+      const queryText = (document.getElementById("searchInput")?.value || "").toLowerCase().trim();
+
+      const visibleToUser = isAdmin
+        ? animals
+        : animals.filter((a) => (a.createdByEmail || "").toLowerCase() === currentUser.toLowerCase());
+
+      const filtered = visibleToUser.filter((a) => {
+        if (!queryText) return true;
+        return [
+          a.animalName,
+          a.animalId,
+          a.animalType,
+          a.breed,
+          a.gender,
+          a.ownerName,
+          a.village,
+          a.vaccination,
+          isAdmin ? a.createdByEmail : ""
+        ].some((field) => String(field || "").toLowerCase().includes(queryText));
+      });
+
+      document.getElementById("record-count").textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        container.innerHTML = "<p>No matching animals found.</p>";
+        return;
+      }
+
+      container.innerHTML = filtered.map((a) => `
+        <div class="animal-card">
+          <h3>${a.animalName} (${a.animalId})</h3>
+          <span class="badge">${a.animalType} • ${a.breed} • ${a.gender} • ${a.age}</span>
+          <p><strong>Weight & Milk:</strong> ${a.weight} kg | ${a.milkProduction} L/day</p>
+          ${a.gender === "Female" ? `
+            <p><strong>Pregnancy Status:</strong> ${a.pregnancyStatus}</p>
+            <p><strong>Prev. Pregnancies / Births:</strong> ${a.prevPregnancies} / ${a.birthCount} (Last: ${a.lastDelivery})</p>
+          ` : ""}
+          <p><strong>Vaccination:</strong> ${a.vaccination}</p>
+          <p><strong>Deworming:</strong> ${a.deworming}</p>
+          <p><strong>Medical History:</strong> ${a.medicalHistory}</p>
+          <hr style="margin: 8px 0; border: 0; border-top: 1px solid #e5e7eb;" />
+          <p><strong>Owner:</strong> ${a.ownerName} (${a.village})</p>
+          <p><strong>Contact:</strong> ${a.contact}</p>
+          ${isAdmin ? `<p><strong>Saved By:</strong> ${a.createdByEmail || a.createdByUid}</p>` : ""}
+          <button class="delete-btn" onclick="deleteAnimal('${a.id}')">Remove Record</button>
+        </div>
+      `).join("");
+    };
+
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      if (user) {
+        document.getElementById("welcome-user").textContent = "User: " + user.email;
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("app-screen").style.display = "block";
+        subscribeToAnimals(user);
+      } else {
+        document.getElementById("app-screen").style.display = "none";
+        document.getElementById("login-screen").style.display = "flex";
+      }
+    });
+  </script>
+</body>
+</html>
